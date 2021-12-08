@@ -9,11 +9,14 @@ public class NewPlayer : PhysicsObject
     [SerializeField] private float jumpPower = 10;
     // [HideInInspector] public int coinsCollected; <-this is if you want to hide this field in the inspector to prevent clutter
     public int coinsCollected;
+    private int maxHealth = 100;
+    public int health = 100;
+    public int ammo;
 
     //references a game component
     public Text coinsText;
     public Image healthBar;
-    private Vector2 healthBarOriginalSize;
+    [SerializeField] private Vector2 healthBarOriginalSize;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,8 @@ public class NewPlayer : PhysicsObject
 
         //grab original size of healthbar image as a place to start scaling it, as needed
         healthBarOriginalSize = healthBar.rectTransform.sizeDelta;
+        //update user interface when game starts to match any variables loaded in the UI
+        UpdateUI();
     }
 
     // Update is called once per frame
@@ -42,10 +47,13 @@ public class NewPlayer : PhysicsObject
     //UPdate UI elements
     public void UpdateUI()
     {
-        //grab the text field of the canvas UI component and insert the num of coins as a string (same variable type, string to string)
+        //grab the text field of the canvas UI component and insert the num of coins as a string (must update same variable type, string to string)
         coinsText.text = coinsCollected.ToString();
-        //to do: scale healthbar according to player health
+        //grab the current healthbar and set it to a new size for it's x & y coordinates. x-width is original size of bar x a % of your current health vs max health ie 50/100 = 50%. Y-height stays unchanged.
+        healthBar.rectTransform.sizeDelta = new Vector2(healthBarOriginalSize.x * ((float)health / (float)maxHealth), healthBar.rectTransform.sizeDelta.y);
+
         //set healthbar image component width to 100
-        healthBar.rectTransform.sizeDelta = new Vector2(100, healthBar.rectTransform.sizeDelta.y);
+        // healthBar.rectTransform.sizeDelta = new Vector2(100, healthBar.rectTransform.sizeDelta.y);
+        // Debug.Log("Health bar %is: " + healthBar.rectTransform.sizeDelta.x / healthBarOriginalSize.x *  100);
     }
 }

@@ -15,24 +15,6 @@ public class Collectible : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Load inventory items and Player game object for updates and re-use
-        
-        if (itemType == ItemType.Coin)
-        {
-            Debug.Log("I'm a coin!");
-        }
-        else if(itemType == ItemType.Health)
-        {
-            Debug.Log("I'm health!");
-        }
-        else if (itemType == ItemType.Ammo)
-        {
-            Debug.Log("I'm ammo!");
-        }
-        else
-        {
-            Debug.Log("I'm an inventory item!");
-        }
         //load the player game object component for reuse...
         newPlayer = GameObject.Find("Player").GetComponent<NewPlayer>();
     }
@@ -51,8 +33,27 @@ public class Collectible : MonoBehaviour
         if (player)
         // if (collision.gameObject.name == "Player") <--Thomas coded this way...
         {
-            //drill down thru active game components: Player > NewPlayer > coinsCollected (variable attached under NewPlayer script)
-            newPlayer.coinsCollected += 1;
+            if (itemType == ItemType.Coin)
+            {
+                //drill down thru active game components: Player > NewPlayer > coinsCollected (variable attached under NewPlayer script)
+                newPlayer.coinsCollected += 1;
+            }
+            else if(itemType == ItemType.Health)
+            {   //only add health if health isn't full
+                if(newPlayer.health < 100)
+                {
+                newPlayer.health += 1;
+                }
+            }
+            else if (itemType == ItemType.Ammo)
+            {
+                Debug.Log("I'm ammo!");
+            }
+            else
+            {
+                Debug.Log("I'm an inventory item!");
+            }
+            
             //drill down to UpdateUI function in NewPlayer that updates game canvas text component with num of coins collected
             newPlayer.UpdateUI();
             /*ALTERNATIVE: set the game obj collided with to inactive/invisible (includes it's children ie trails etc)
